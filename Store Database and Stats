@@ -1,0 +1,32 @@
+-- Create a Store Database
+
+CREATE TABLE store_database (ID INTEGER PRIMARY KEY, Item TEXT, Price INTEGER, Rating INTEGER, Category TEXT);
+
+INSERT INTO store_database VALUES (1, "Graphic T-Shirts", 15, 4, "Clothing");
+INSERT INTO store_database VALUES (2, "Skatebaord", 50, 5, "Recreation");
+INSERT INTO store_database VALUES (3, "Bicycle", 99, 4, "Recreation");
+INSERT INTO store_database VALUES (4, "Tennis Shoes", 80, 3, "Clothing");
+INSERT INTO store_database VALUES (5, "XBOX", 150, 10, "Games");
+INSERT INTO store_database VALUES (6, "Popcorn", 5, 3, "Food");
+
+-- Select everything from store database
+SELECT * FROM store_database;
+
+-- Select everything from store database where the price is over 50
+SELECT * FROM store_database 
+WHERE (Price > 50);
+
+-- Select everything from store database ordered by price in descending order
+SELECT * FROM store_database 
+ORDER BY Price desc;
+
+-- Show the sum of all the prices in the database where the rating is more than 1
+SELECT SUM(Price) "Sum off all prices"
+FROM store_database
+WHERE Rating > 1;
+
+-- Select Item, Price, and Category ordered by ID only showing 3 entries
+SELECT Item, Price, Category
+FROM store_database
+ORDER BY ID desc
+LIMIT 3;
