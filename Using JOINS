@@ -1,0 +1,98 @@
+set linezise 1000;
+
+select table_name from user_tables;
+
+
+1.)	Create a list that displays the title of each book and the name and phone number 
+of the contact at the publisher’s office for reordering each book.
+
+
+COLUMN TITLE FORMAT A30
+
+SELECT books.title, publisher.name, publisher.contact, publisher.phone 
+FROM books INNER JOIN publisher ON books.pubid = publisher.pubid;
+
+
+
+2.)	Determine which orders haven’t yet shipped and the name of the customer who placed the order. 
+Sort the results by the date on which the order was placed.
+
+
+
+SELECT orders.order#, orders.orderdate, customers.firstname, customers.lastname 
+FROM customers INNER JOIN orders ON orders.customer# = customers.customer# 
+WHERE orders.shipdate IS NULL ORDER BY orderdate;
+
+
+
+3.)	Produce a list of all the customers who live in the state of Florida and have ordered books about computers.
+
+
+
+SELECT c.firstname, c.lastname, c.customer#, b.isbn, b.title, b.category 
+FROM customers c 
+INNER JOIN orders o ON c.customer# = o.customer#
+INNER JOIN orderitems oi ON o.order# = oi.order#
+INNER JOIN books b ON oi.isbn = b.isbn
+WHERE (b.category = 'COMPUTER' OR b.category = 'computer') AND (c.state = 'FL' OR c.state = 'fl');
+
+
+
+4.)	What gift will a customer who orders the book "Shortest Poems" receive? Use the actual book retail value to determine the gift. 
+
+
+
+COLUMN TITLE FORMAT A15 WORD_WRAP 
+COLUMN GIFT FORMAT A8 WORD_WRAP 
+COLUMN ORDER# FORMAT 99999 WORD_WRAP 
+
+SELECT c.customer#, c.firstname, c.lastname, o.order#, b.title, b.isbn, b.category, p.gift, b.retail, p.Minretail, p.Maxretail
+FROM customers c
+INNER JOIN orders o ON c.customer# = o.customer#
+INNER JOIN orderitems oi ON o.order# = oi.order#
+INNER JOIN books b ON oi.isbn = b.isbn
+INNER JOIN promotion p ON b.retail BETWEEN p.Minretail AND p.Maxretail
+WHERE b.title = 'SHORTEST POEMS';
+
+
+
+5.)	Display a list of ALL books in the BOOKS table. If a book has been ordered by a customer, 
+also list the corresponding order number and the state in which the customer resides. 
+
+
+
+COLUMN TITLE FORMAT A45 WORD_WRAP
+
+SELECT b.isbn, b.title, b.category, c.firstname, c.lastname, c.customer#, c.state, o.order#
+FROM customers c
+INNER JOIN orders o ON c.customer# = o.customer#
+INNER JOIN orderitems oi ON o.order# = oi.order#
+RIGHT JOIN books b ON oi.isbn = b.isbn;
+
+
+
+
+6.)	Which books were written by an author with the last name Adams? Perform the search using the author name. 
+
+
+SELECT b.title, b.isbn, a.fname, a.lname, a.authorid
+FROM books b
+INNER JOIN bookauthor ba ON b.isbn = ba.isbn
+INNER JOIN author a ON ba.authorid = a.authorid
+WHERE a.lname = 'ADAMS';
+
+
+7.)	Identify the authors of the books Becca Nelson ordered. Perform the search using the customer name. 
+
+
+
+COLUMN TITLE FORMAT A30 WORD_WRAP
+
+SELECT c.customer#, c.firstname, c.lastname, o.order#, b.title, b.isbn, a.fname, a.lname, a.authorid
+FROM customers c
+JOIN orders o ON c.customer# = o.customer#
+JOIN orderitems oi On o.order# = oi.order#
+JOIN books b ON oi.isbn = b.isbn
+JOIN bookauthor ba ON b.isbn = ba.isbn
+JOIN author a ON ba.authorid = a.authorid
+WHERE c.firstname = 'BECCA' AND c.lastname = 'NELSON';
